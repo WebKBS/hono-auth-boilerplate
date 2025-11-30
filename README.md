@@ -1,4 +1,4 @@
-# Sejin Yugwa API
+# Auth API
 
 Bun, Hono, Drizzle ORM을 기반으로 한 현대적인 웹 API 서버입니다. PostgreSQL 데이터베이스와 함께 확장 가능하고 안전한 REST API를 제공합니다.
 
