@@ -2,10 +2,11 @@ import { envConfig } from "@/config/env.ts";
 import { verifyPassword } from "@/libs/hash";
 import { createToken } from "@/libs/jwt";
 import { LoginType } from "@/modules/admin/auth/auth.dto.ts";
+import { AppError } from "@/utils/appError.ts";
 
 export const adminLoginService = async ({ email, password }: LoginType) => {
   if (email !== envConfig.ADMIN_ID) {
-    throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
+    throw new AppError("아이디 또는 비밀번호가 일치하지 않습니다.", 400);
   }
 
   const isValid = await verifyPassword(
@@ -14,7 +15,7 @@ export const adminLoginService = async ({ email, password }: LoginType) => {
   );
 
   if (!isValid) {
-    throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
+    throw new AppError("아이디 또는 비밀번호가 일치하지 않습니다.", 400);
   }
 
   const accessToken = await createToken({

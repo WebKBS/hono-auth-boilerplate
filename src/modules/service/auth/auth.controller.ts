@@ -1,33 +1,21 @@
 import { Context } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { loginService, registerService } from "./auth.service";
+import { loginService, registerService, snsLoginService } from "./auth.service";
 
-export const registerHandler = async (c: Context) => {
+export const registerController = async (c: Context) => {
   const body = await c.req.json();
-  try {
-    const data = await registerService(body);
-    return c.json(data, 201);
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new HTTPException(400, { message: error.message });
-    }
-
-    console.error("Unexpected error:", error);
-    throw new HTTPException(500, { message: "Internal Server Error" });
-  }
+  const data = await registerService(body);
+  return c.json(data, 201);
 };
 
-export const loginHandler = async (c: Context) => {
+export const loginController = async (c: Context) => {
   const body = await c.req.json();
-  try {
-    const data = await loginService(body);
-    return c.json(data, 200);
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new HTTPException(401, { message: error.message });
-    }
+  const data = await loginService(body);
+  return c.json(data, 200);
+};
 
-    console.error("Unexpected error:", error);
-    throw new HTTPException(500, { message: "Internal Server Error" });
-  }
+export const snsLoginController = async (c: Context) => {
+  const body = await c.req.json();
+
+  const data = await snsLoginService(body);
+  return c.json(data, 200);
 };

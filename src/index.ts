@@ -11,6 +11,8 @@ import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
+import { z } from "zod";
+import { AppError } from "@/utils/appError.ts";
 
 const app = new Hono();
 
@@ -54,13 +56,13 @@ app.get(
   openAPIRouteHandler(serviceRoute, {
     documentation: {
       info: {
-        title: "API",
+        title: "세진유과 API",
         version: "1.0.0",
-        description: "API 명세서",
+        description: "세진유과 API 명세서",
       },
 
       externalDocs: {
-        description: "Admin API",
+        description: "세진유과 Admin API",
         url: "http://localhost:8000/docs/admin",
       },
 
@@ -106,12 +108,25 @@ app.get(
 app.notFound((c) => c.json({ message: "Not Found" }, 404));
 
 app.onError((error, c) => {
+  console.error("🔥 Error occurred:", error);
+
+  if (error instanceof z.ZodError) {
+    console.error(error);
+    return c.json(
+      { message: error.issues.map((issue) => issue.message).join(", ") },
+      400,
+    );
+  }
+
+  if (error instanceof AppError) {
+    return c.json({ message: error.message }, { status: error.status });
+  }
+
   if (error instanceof HTTPException) {
-    return c.json({ message: error.message }, error.status);
+    return c.json({ message: error.message }, { status: error.status });
   }
 
   // 예상치 못한 서버 오류
-  console.error("Unexpected Error:", error);
   return c.json({ error: "Internal Server Error" }, 500);
 });
 

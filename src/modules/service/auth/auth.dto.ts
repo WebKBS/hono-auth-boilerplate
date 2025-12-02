@@ -16,14 +16,27 @@ export const registerSchema = z
       .regex(/[A-Z]/, {
         error: "비밀번호에는 최소 하나의 대문자가 포함되어야 합니다",
       }),
+    name: z.string().min(1, {
+      error: "이름은 필수 입력 항목입니다",
+    }),
+    phone: z.string().min(1, {
+      error: "전화번호는 필수 입력 항목입니다",
+    }),
+    provider: z.string().optional(),
+    providerId: z.string().optional(),
+
+    avatarUrl: z.url().optional(),
   })
   .describe("회원가입 요청 스키마")
   .meta({
     ref: "Register",
     title: "Register",
     example: {
-      email: "test@example.com",
+      email: "test1@example.com",
       password: "Password123!",
+      name: "홍길동",
+      phone: "010-1234-5678",
+      avatarUrl: "https://example.com/avatar.jpg",
     },
   });
 
@@ -47,6 +60,31 @@ export const loginSchema = z
     },
   });
 
+export const snsLoginSchema = z
+  .object({
+    provider: z.string().min(1, {
+      error: "SNS 제공자는 필수 입력 항목입니다",
+    }),
+    providerId: z.string().min(1, {
+      error: "SNS 제공자 ID는 필수 입력 항목입니다",
+    }),
+    email: z.email().optional(),
+    name: z.string().optional(),
+    phone: z.string().optional(),
+    avatarUrl: z.url().optional(),
+  })
+  .describe("SNS 로그인 요청 스키마")
+  .meta({
+    ref: "SnsLogin",
+    title: "SnsLogin",
+    example: {
+      provider: "google",
+      providerId: "google-unique-id-12345",
+      email: "example@example.com",
+      name: "홍길동",
+    },
+  });
+
 // 스키마 검증 미들웨어
 export const validateRegisterSchema = validator(
   "json",
@@ -56,6 +94,12 @@ export const validateRegisterSchema = validator(
 export const validateLoginSchema = validator(
   "json",
   loginSchema,
+  validateSchema,
+);
+
+export const validateSnsLoginSchema = validator(
+  "json",
+  snsLoginSchema,
   validateSchema,
 );
 

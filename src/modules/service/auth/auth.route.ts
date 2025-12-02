@@ -1,12 +1,14 @@
 import {
-  loginHandler,
-  registerHandler,
+  loginController,
+  registerController,
+  snsLoginController,
 } from "@/modules/service/auth/auth.controller.ts";
 import {
   responseLoginSchema,
   responseRegisterSchema,
   validateLoginSchema,
   validateRegisterSchema,
+  validateSnsLoginSchema,
 } from "@/modules/service/auth/auth.dto.ts";
 import { Hono } from "hono";
 import { describeRoute, resolver } from "hono-openapi";
@@ -29,7 +31,7 @@ authRoute.post(
     },
   }),
   validateRegisterSchema,
-  registerHandler,
+  registerController,
 );
 
 authRoute.post(
@@ -48,7 +50,26 @@ authRoute.post(
     },
   }),
   validateLoginSchema,
-  loginHandler,
+  loginController,
+);
+
+authRoute.post(
+  "/sns",
+  describeRoute({
+    tags: ["Auth"],
+    summary: "SNS 로그인 (자동 회원가입 포함)",
+    description: "provider + providerId를 기반으로 SNS 로그인 처리.",
+    responses: {
+      200: {
+        description: "성공",
+        content: {
+          "application/json": { schema: resolver(responseLoginSchema) },
+        },
+      },
+    },
+  }),
+  validateSnsLoginSchema,
+  snsLoginController,
 );
 
 export default authRoute;
