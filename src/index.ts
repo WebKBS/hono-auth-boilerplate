@@ -13,8 +13,12 @@ import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
 import { z } from "zod";
 import { AppError } from "@/utils/appError.ts";
+import { rateLimitMiddleware } from "@/middlewares/rate-limit.middleware.ts";
 
 const app = new Hono();
+
+app.use(secureHeaders());
+app.use("*", rateLimitMiddleware);
 
 app.use(
   cors({

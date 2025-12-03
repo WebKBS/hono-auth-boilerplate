@@ -4,12 +4,14 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@hono/eslint-config": "^2.0.3",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.1.5",
     "@types/pg": "^8.15.6",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.7",
     "hono-openapi": "^1.1.1",
+    "hono-rate-limiter": "^0.4.2",
     "pg": "^8.16.3",
     "postgres": "^3.4.7",
     "zod": "^4.1.13"

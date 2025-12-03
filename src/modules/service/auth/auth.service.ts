@@ -61,14 +61,14 @@ export const loginService = async ({ email, password }: LoginType) => {
   const userData = await findUserById(account.userId);
   const user = userData[0];
 
-  const token = await createToken({ id: user.id, role: user.role });
+  const accessToken = await createToken({ id: user.id, role: user.role });
 
   return {
-    token,
     user: {
       id: user.id,
       email: user.email,
       role: user.role,
+      accessToken: accessToken,
     },
   };
 };
@@ -96,14 +96,14 @@ export const snsLoginService = async ({
     const userData = await findUserById(accounts[0].userId);
     const user = userData[0];
 
-    const token = await createToken({ id: user.id, role: user.role });
+    const accessToken = await createToken({ id: user.id, role: user.role });
 
     return {
-      token,
       user: {
         id: user.id,
         email: user.email,
         role: user.role,
+        accessToken: accessToken,
       },
     };
   }
@@ -122,14 +122,14 @@ export const snsLoginService = async ({
     providerId,
   });
 
-  const token = await createToken({ id: user.id, role: user.role });
+  const accessToken = await createToken({ id: user.id, role: user.role });
 
   return {
-    token,
     user: {
       id: user.id,
       email: user.email,
       role: user.role,
+      accessToken: accessToken,
     },
   };
 };

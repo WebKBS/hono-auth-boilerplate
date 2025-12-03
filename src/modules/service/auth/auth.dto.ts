@@ -62,10 +62,10 @@ export const loginSchema = z
 
 export const snsLoginSchema = z
   .object({
-    provider: z.string().min(1, {
+    provider: z.string("SNS 제공자는 필수 입력 항목입니다").min(1, {
       error: "SNS 제공자는 필수 입력 항목입니다",
     }),
-    providerId: z.string().min(1, {
+    providerId: z.string("SNS 제공자 ID는 필수 입력 항목입니다").min(1, {
       error: "SNS 제공자 ID는 필수 입력 항목입니다",
     }),
     email: z.email().optional(),
@@ -106,22 +106,22 @@ export const validateSnsLoginSchema = validator(
 // 로그인 응답 스키마
 export const responseLoginSchema = z
   .object({
-    token: z.string(),
     user: z.object({
       id: z.number(),
       email: z.email(),
       role: z.string(),
+      accessToken: z.string(),
     }),
   })
   .describe("로그인 응답 스키마")
   .meta({
     title: "LoginResponse",
     example: {
-      token: "asdasdqwd",
       user: {
         id: 1,
         email: "test@example.com",
         role: "user",
+        accessToken: "asdasdqwd",
       },
     },
   });
